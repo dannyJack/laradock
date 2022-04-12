@@ -1,4 +1,4 @@
-FROM redis:latest
+FROM redis:5.0-alpine
 
 LABEL maintainer="Mahmoud Zalt <mahmoud@zalt.me>"
 
