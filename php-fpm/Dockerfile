@@ -1243,6 +1243,9 @@ RUN if [ ${INSTALL_ZMQ} = true ]; then \
 USER root
 
 ARG INSTALL_CUSTOM_DEPENDENCIES=false
+ENV NVM_DIR /home/laradock/.nvm
+ARG NODE_VERSION=node
+ENV NODE_VERSION ${NODE_VERSION}
 
 RUN if [ ${INSTALL_CUSTOM_DEPENDENCIES} = true ]; then \
     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
@@ -1255,6 +1258,13 @@ RUN if [ ${INSTALL_CUSTOM_DEPENDENCIES} = true ]; then \
     && docker-php-ext-install pspell \
     && pecl install mcrypt-stable \
     && docker-php-ext-enable mcrypt \
+    # Install nvm (A Node Version Manager)
+    && mkdir -p $NVM_DIR \
+    && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash \
+    && . $NVM_DIR/nvm.sh \
+    && nvm install ${NODE_VERSION} \
+    && nvm use ${NODE_VERSION} \
+    && nvm alias ${NODE_VERSION} \
 ;fi
 
 ###########################################################################
