@@ -1265,6 +1265,13 @@ RUN if [ ${INSTALL_CUSTOM_DEPENDENCIES} = true ]; then \
     && nvm install ${NODE_VERSION} \
     && nvm use ${NODE_VERSION} \
     && nvm alias ${NODE_VERSION} \
+    # Install phpunit
+    && apt-get update \
+    && apt-get -y install wget \
+    && wget https://phar.phpunit.de/phpunit-6.5.phar \
+    && chmod +x phpunit-6.5.phar \
+    && mv phpunit-6.5.phar /usr/local/bin/phpunit \
+    && phpunit --version \
 ;fi
 
 ###########################################################################
