@@ -1777,7 +1777,10 @@ services:
 
 ### phpMyAdmin2 ###########################################
     phpmyadmin2:
-      build: ./phpmyadmin
+      build:
+        context: ./phpmyadmin
+        args:
+          - SESSION_PATH=sessions2
       environment:
         - PMA_ARBITRARY=1
         - MYSQL_USER=${PMA_USER}
