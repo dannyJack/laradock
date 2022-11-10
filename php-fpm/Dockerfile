@@ -1247,7 +1247,7 @@ RUN if [ ${INSTALL_CUSTOM_DEPENDENCIES} = true ]; then \
     && docker-php-ext-install pspell \
 ;fi
 
-RUN if [ ${LARADOCK_PHP_VERSION} != "7.1" ]; then \
+RUN if [ ${LARADOCK_PHP_VERSION} != "5.6" && ${LARADOCK_PHP_VERSION} != "7.0" && ${LARADOCK_PHP_VERSION} != "7.1" ]; then \
     pecl install mcrypt-stable \
     && docker-php-ext-enable mcrypt \
 ;fi
@@ -1260,13 +1260,39 @@ RUN if [ ${INSTALL_CUSTOM_DEPENDENCIES} = true ]; then \
     && nvm install ${NODE_VERSION} \
     && nvm use ${NODE_VERSION} \
     && nvm alias ${NODE_VERSION} \
-    # Install phpunit
-    && apt-get update && apt-get install -y \
-    && apt-get -y install wget \
-    && wget https://phar.phpunit.de/phpunit-6.5.phar \
-    && chmod +x phpunit-6.5.phar \
-    && mv phpunit-6.5.phar /usr/local/bin/phpunit \
-    && phpunit --version \
+    && if [ ${LARADOCK_PHP_VERSION} = "5.6" ]; then \
+      # Install phpunit
+      apt-get update && apt-get install -y \
+      && apt-get -y install wget \
+      && wget https://phar.phpunit.de/phpunit-5.phar \
+      && chmod +x phpunit-5.phar \
+      && mv phpunit-5.phar /usr/local/bin/phpunit \
+      && phpunit --version \
+    ;elif [ ${LARADOCK_PHP_VERSION} = "7.0" ]; then \
+      # Install phpunit
+      apt-get update && apt-get install -y \
+      && apt-get -y install wget \
+      && wget https://phar.phpunit.de/phpunit-6.5.phar \
+      && chmod +x phpunit-6.5.phar \
+      && mv phpunit-6.5.phar /usr/local/bin/phpunit \
+      && phpunit --version \
+    ;elif [ ${LARADOCK_PHP_VERSION} = "7.1" || ${LARADOCK_PHP_VERSION} = "7.2" || ${LARADOCK_PHP_VERSION} = "7.3" ]; then \
+      # Install phpunit
+      apt-get update && apt-get install -y \
+      && apt-get -y install wget \
+      && wget https://phar.phpunit.de/phpunit-7.phar \
+      && chmod +x phpunit-7.phar \
+      && mv phpunit-7.phar /usr/local/bin/phpunit \
+      && phpunit --version \
+    ;else \
+      # Install phpunit
+      apt-get update && apt-get install -y \
+      && apt-get -y install wget \
+      && wget https://phar.phpunit.de/phpunit-8.phar \
+      && chmod +x phpunit-8.phar \
+      && mv phpunit-8.phar /usr/local/bin/phpunit \
+      && phpunit --version \
+    ;fi \
 ;fi
 
 
