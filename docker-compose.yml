@@ -317,7 +317,7 @@ services:
       links:
         - docker-in-docker
 
-### PHP-FPM-&.0 ##############################################
+### PHP-FPM-8.0 ##############################################
     php-fpm-8.0:
       build:
         context: ./php-fpm
@@ -1220,7 +1220,6 @@ services:
         - "${VARNISH_BACKEND_PORT}:81"
       depends_on:
         - php-fpm
-        - php-fpm-8.1
         - php-fpm-8.0
         - php-fpm-7.4
         - php-fpm-7.3
