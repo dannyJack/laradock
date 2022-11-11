@@ -268,7 +268,7 @@ RUN if [ ${INSTALL_YAML} = true ]; then \
 # PHP Memcached:
 ###########################################################################
 
-ARG INSTALL_MEMCACHED=false
+ARG INSTALL_MEMCACHED=true
 
 RUN if [ ${INSTALL_MEMCACHED} = true ]; then \
   apk --update add libmemcached-dev; \

@@ -89,7 +89,7 @@ RUN set -xe; \
 # Set Timezone
 ###########################################################################
 
-ARG TZ=UTC
+ARG TZ=Asia/Tokyo
 ENV TZ ${TZ}
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -241,7 +241,7 @@ ARG INSTALL_BZ2=false
 ARG INSTALL_GMP=false
 ARG INSTALL_GNUPG=false
 ARG INSTALL_SSH2=false
-ARG INSTALL_SOAP=false
+ARG INSTALL_SOAP=true
 ARG INSTALL_XSL=false
 ARG PHP_VERSION=${LARADOCK_PHP_VERSION}
 
@@ -1191,7 +1191,7 @@ RUN if [ ${INSTALL_POWERLINE} = true ]; then \
 ###########################################################################
 # SUPERVISOR:
 ###########################################################################
-ARG INSTALL_SUPERVISOR=false
+ARG INSTALL_SUPERVISOR=true
 
 RUN if [ ${INSTALL_SUPERVISOR} = true ]; then \
     if [ ${INSTALL_PYTHON} = true ]; then \

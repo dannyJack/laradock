@@ -1,4 +1,4 @@
-FROM redis:5.0-alpine
+FROM redis:latest
 
 LABEL maintainer="Mahmoud Zalt <mahmoud@zalt.me>"
 
@@ -11,4 +11,4 @@ VOLUME /data
 EXPOSE 6379
 
 #CMD ["redis-server", "/usr/local/etc/redis/redis.conf"]
-CMD ["redis-server", "--daemonize", "no"]
+CMD ["redis-server"]
