@@ -1297,6 +1297,20 @@ RUN if [ ${INSTALL_CUSTOM_DEPENDENCIES} = true ]; then \
 
 
 ############################################################################
+## CURIO:
+############################################################################
+
+ARG PROJECT
+
+RUN if [ ${PROJECT} = 'curio' ]; then \
+    mkdir -p /data/www/curio_server/public/files/pics \
+    && chmod 0777 /data/www/curio_server/public/files/pics \
+    && mkdir /data/pics_files \
+    && chmod 0777 /data/pics_files \
+;fi
+
+
+############################################################################
 ## Event:
 ############################################################################
 USER root
