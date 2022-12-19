@@ -1238,6 +1238,76 @@ RUN if [ ${INSTALL_ZMQ} = true ]; then \
     && echo "extension=zmq.so" > /usr/local/etc/php/conf.d/zmq.ini \
 ;fi
 
+###########################################################################
+# CUSTOM DEPENDENCIES:
+###########################################################################
+
+USER root
+
+ARG INSTALL_CUSTOM_DEPENDENCIES=false
+ENV NVM_DIR /home/laradock/.nvm
+ARG NODE_VERSION=node
+ENV NODE_VERSION ${NODE_VERSION}
+
+RUN if [ ${INSTALL_CUSTOM_DEPENDENCIES} = true ]; then \
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php -r "if (hash_file('sha384', 'composer-setup.php') === '55ce33d7678c5a611085589f1f3ddf8b3c52d662cd01d4ba75c0ee0459970c2200a51f492d557530c71c15d8dba01eae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+    && php composer-setup.php \
+    && php -r "unlink('composer-setup.php');" \
+    && mv composer.phar /usr/local/bin/composer \
+    && docker-php-ext-install pcntl \
+    && apt update && apt install -y libpspell-dev && rm -rf /var/lib/apt/lists/* \
+    && docker-php-ext-install pspell \
+;fi
+
+RUN if [ ${LARADOCK_PHP_VERSION} != "5.6" && ${LARADOCK_PHP_VERSION} != "7.0" && ${LARADOCK_PHP_VERSION} != "7.1" ]; then \
+    pecl install mcrypt-stable \
+    && docker-php-ext-enable mcrypt \
+;fi
+
+RUN if [ ${INSTALL_CUSTOM_DEPENDENCIES} = true ]; then \
+    # Install nvm (A Node Version Manager)
+    mkdir -p $NVM_DIR \
+    && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash \
+    && . $NVM_DIR/nvm.sh \
+    && nvm install ${NODE_VERSION} \
+    && nvm use ${NODE_VERSION} \
+    && nvm alias ${NODE_VERSION} \
+    && if [ ${LARADOCK_PHP_VERSION} = "5.6" ]; then \
+      # Install phpunit
+      apt-get update && apt-get install -y \
+      && apt-get -y install wget \
+      && wget https://phar.phpunit.de/phpunit-5.phar \
+      && chmod +x phpunit-5.phar \
+      && mv phpunit-5.phar /usr/local/bin/phpunit \
+      && phpunit --version \
+    ;elif [ ${LARADOCK_PHP_VERSION} = "7.0" ]; then \
+      # Install phpunit
+      apt-get update && apt-get install -y \
+      && apt-get -y install wget \
+      && wget https://phar.phpunit.de/phpunit-6.5.phar \
+      && chmod +x phpunit-6.5.phar \
+      && mv phpunit-6.5.phar /usr/local/bin/phpunit \
+      && phpunit --version \
+    ;elif [ ${LARADOCK_PHP_VERSION} = "7.1" || ${LARADOCK_PHP_VERSION} = "7.2" || ${LARADOCK_PHP_VERSION} = "7.3" ]; then \
+      # Install phpunit
+      apt-get update && apt-get install -y \
+      && apt-get -y install wget \
+      && wget https://phar.phpunit.de/phpunit-7.phar \
+      && chmod +x phpunit-7.phar \
+      && mv phpunit-7.phar /usr/local/bin/phpunit \
+      && phpunit --version \
+    ;else \
+      # Install phpunit
+      apt-get update && apt-get install -y \
+      && apt-get -y install wget \
+      && wget https://phar.phpunit.de/phpunit-8.phar \
+      && chmod +x phpunit-8.phar \
+      && mv phpunit-8.phar /usr/local/bin/phpunit \
+      && phpunit --version \
+    ;fi \
+;fi
+
 
 ############################################################################
 ## Event:
